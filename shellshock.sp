@@ -79,17 +79,17 @@ new Handle:hss_shotgun_damage_multiplier;
 //Actual values
 new Float:ss_respawn_time = 0.5;
 new Float:ss_playerspeed = 320.0;
-new bool:ss_physcannon = 1;
-new bool:ss_shotgun = 1;
-new bool:ss_crossbow = 0;
-new bool:ss_pistol = 1;
-new bool:ss_rpg = 0;
-new bool:ss_frag = 0;
-new bool:ss_ar2 = 0;
-new bool:ss_smg1 = 0;
-new bool:ss_slam = 0;
-new bool:ss_melee = 1;
-new bool:ss_357 = 0;
+new bool:ss_physcannon = true;
+new bool:ss_shotgun = true;
+new bool:ss_crossbow = false;
+new bool:ss_pistol = true;
+new bool:ss_rpg = false;
+new bool:ss_frag = false;
+new bool:ss_ar2 = false;
+new bool:ss_smg1 = false;
+new bool:ss_slam = false;
+new bool:ss_melee = true;
+new bool:ss_357 = false;
 new ss_shotgun_defaultclip = 8;
 new ss_shotgun_maxclip = 8;
 new Float:ss_shotgun_damage_multiplier = 3.0;
@@ -118,28 +118,28 @@ public OnPluginStart()
 	*/
 	//GiveAmmo
 	StartPrepSDKCall(SDKCall_Player);
-    PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "GiveAmmo");
-    PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-    PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-    PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
-    hGiveAmmo = EndPrepSDKCall();
+	PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "GiveAmmo");
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+	hGiveAmmo = EndPrepSDKCall();
 	
 	//RemoveAllItems
 	StartPrepSDKCall(SDKCall_Player);
-    PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "RemoveAllItems");
-    PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
-    hRemoveAllItems = EndPrepSDKCall();
+	PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "RemoveAllItems");
+	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+	hRemoveAllItems = EndPrepSDKCall();
 	
 	//SetAnimation
 	StartPrepSDKCall(SDKCall_Player);
-    PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "SetAnimation");
-    PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-    hSetAnimation = EndPrepSDKCall();
+	PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "SetAnimation");
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	hSetAnimation = EndPrepSDKCall();
 	
 	//Spawn call
 	StartPrepSDKCall(SDKCall_Player);
-    PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "Spawn");
-    hSpawnCall = EndPrepSDKCall();
+	PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "Spawn");
+	hSpawnCall = EndPrepSDKCall();
 	
 	StartPrepSDKCall(SDKCall_Entity);
 	PrepSDKCall_SetFromConf(config, SDKConf_Virtual, "SetWeaponIdleTime");
@@ -159,7 +159,7 @@ public OnPluginStart()
 	
 	//Hook existing clients
 	new playersconnected = GetMaxClients();
-    for (new i = 1; i <= playersconnected; i++)
+	for (new i = 1; i <= playersconnected; i++)
     {
         if(IsClientInGame(i))
         {    
@@ -174,7 +174,7 @@ CreateConVars()
 	hss_playerspeed 					= CreateConVar("ss_playerspeed", "320", "Sets the speed of the players", FCVAR_PROTECTED, true, 1.0);
 	hss_physcannon 						= CreateConVar("ss_physcannon", "1", "Sets whether players spawn with the gravity gun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
 	hss_shotgun 						= CreateConVar("ss_shotgun", "1", "Sets whether players spawn with the shotgun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_crossbow 						= CreateConVar("ss_crossbow", "0", "Sets whether players spawn with the crossbow", FCVAR_PROTECTED, true, 0, true, 1.0);
+	hss_crossbow 						= CreateConVar("ss_crossbow", "0", "Sets whether players spawn with the crossbow", FCVAR_PROTECTED, true, 0.0, true, 1.0);
 	hss_pistol 							= CreateConVar("ss_pistol", "1", "Sets whether players spawn with the pistol", FCVAR_PROTECTED, true, 0.0, true, 1.0);
 	hss_rpg 							= CreateConVar("ss_rpg", "0", "Sets whether players spawn with the rpg", FCVAR_PROTECTED, true, 0.0, true, 1.0);
 	hss_frag 							= CreateConVar("ss_frag", "0", "Sets whether players spawn with the frag", FCVAR_PROTECTED, true, 0.0, true, 1.0);
@@ -220,47 +220,47 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 	}
 	else if(cvar == hss_physcannon)
 	{
-		ss_physcannon = StringToInt(newVal);
+		ss_physcannon = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_shotgun)
 	{
-		ss_shotgun = StringToInt(newVal);
+		ss_shotgun = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_crossbow)
 	{
-		ss_crossbow = StringToInt(newVal);
+		ss_crossbow = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_pistol)
 	{
-		ss_pistol = StringToInt(newVal);
+		ss_pistol = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_rpg)
 	{
-		ss_rpg = StringToInt(newVal);
+		ss_rpg = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_frag)
 	{
-		ss_frag = StringToInt(newVal);
+		ss_frag = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_ar2)
 	{
-		ss_ar2 = StringToInt(newVal);
+		ss_ar2 = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_smg1)
 	{
-		ss_smg1 = StringToInt(newVal);
+		ss_smg1 = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_slam)
 	{
-		ss_slam = StringToInt(newVal);
+		ss_slam = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_melee)
 	{
-		ss_melee = StringToInt(newVal);
+		ss_melee = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_357)
 	{
-		ss_357 = StringToInt(newVal);
+		ss_357 = (StringToInt(newVal) == 0 ? false : true);
 	}
 	else if(cvar == hss_shotgun_defaultclip)
 	{
@@ -275,7 +275,7 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 		ss_shotgun_damage_multiplier = StringToFloat(newVal);
 	}
 }
-public InitClientHooks(config)
+public InitClientHooks(Handle:config)
 {
 	//PreThink post hook
 	new offset = GameConfGetOffset(config, "PreThink");
@@ -296,7 +296,7 @@ public InitClientHooks(config)
 	DHookAddParam(hOnTakeDamage, HookParamType_ObjectPtr);
 }
 
-public InitShotgunHooks(config)
+public InitShotgunHooks(Handle:config)
 {
 	//GetMaxClip1 pre
 	new offset = GameConfGetOffset(config, "GetMaxClip1");
@@ -323,7 +323,7 @@ public InitShotgunHooks(config)
 	hSecondaryAttackShotgun = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, SecondaryAttackShotgunPost);
 }
 
-public InitFragHooks(config)
+public InitFragHooks(Handle:config)
 {
 	//Operator_HandleAnimEvent pre hook
 	new offset = GameConfGetOffset(config, "Operator_HandleAnimEvent");
@@ -332,7 +332,7 @@ public InitFragHooks(config)
 	DHookAddParam(hOperator_HandleAnimEvent, HookParamType_CBaseEntity);
 }
 
-public InitCrossbowHooks(config)
+public InitCrossbowHooks(Handle:config)
 {
 	//HasWeaponIdleTimeElapsed pre
 	new offset = GameConfGetOffset(config, "HasWeaponIdleTimeElapsed");
@@ -580,12 +580,12 @@ public MRESReturn:OnTakeDamagePre(this, Handle:hReturn, Handle:hParams)
 	new inflictor = DHookGetParamObjectPtrVar(hParams, 1, 36, ObjectValueType_Ehandle);
 	
 	if(attacker == -1 || this == -1 || (this == attacker) || inflictor == -1)
-		return 0;
+		return MRES_Ignored;
 	//Spawn protection
 	if(nextEligibleDamageTime[this] > GetGameTime())
 	{
 		DHookSetParamObjectPtrVar(hParams, 1, 48, ObjectValueType_Float, 0.0);
-		return 1;
+		return MRES_Handled ;
 	}
 	
 	new ammoType = DHookGetParamObjectPtrVar(hParams, 1, 72, ObjectValueType_Int);
@@ -601,9 +601,9 @@ public MRESReturn:OnTakeDamagePre(this, Handle:hReturn, Handle:hParams)
 		ScaleVector(damageForce, 10000.0);//Because lol
 		DHookSetParamObjectPtrVarVector(hParams, 1, 0, ObjectValueType_Vector, damageForce);
 		
-		return 1;
+		return MRES_Handled ;
 	}
-	return 0;
+	return MRES_Ignored;
 }
 public MRESReturn:PreThinkPost(this)
 {
@@ -654,23 +654,23 @@ public MRESReturn:Operator_HandleAnimEventPre(this, Handle:hParams)
 {
 	if(ThrowContactGrenade(this, hParams) == true)
 		return MRES_Supercede;
-	return 0;
+	return MRES_Ignored;
 }
 
 public MRESReturn:GetMaxClip1Pre(this, Handle:hReturn)
 {
 	DHookSetReturn(hReturn, ss_shotgun_maxclip); 
-    return MRES_Supercede;
+	return MRES_Supercede;
 }
 public MRESReturn:GetDefaultClip1Pre(this, Handle:hReturn)
 {
 	DHookSetReturn(hReturn, ss_shotgun_defaultclip);
-    return MRES_Supercede;
+	return MRES_Supercede;
 }
 public MRESReturn:AllowAutoSwitchFromPre(this, Handle:hReturn)
 {
 	DHookSetReturn(hReturn, false); 
-    return MRES_Supercede;
+	return MRES_Supercede;
 }
 public MRESReturn:ReloadShotgunPost(this, Handle:hReturn)
 {
@@ -678,7 +678,7 @@ public MRESReturn:ReloadShotgunPost(this, Handle:hReturn)
 	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
 	refire -= 0.35;//This isn't really half...
 	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
-    return MRES_Ignored;
+	return MRES_Ignored;
 }
 public MRESReturn:PrimaryAttackShotgunPost(this)
 {
@@ -698,7 +698,7 @@ public MRESReturn:ReloadCrossbowPre(this, Handle:hReturn)
 {
 	SetEntProp(this, Prop_Send, "m_bMustReload", false);
 	DHookSetReturn(hReturn, true);
-    return MRES_Override;
+	return MRES_Override;
 }
 bool:ThrowContactGrenade(weaponFrag, Handle:hParams)
 {
@@ -803,7 +803,7 @@ public MRESReturn:HasWeaponIdleTimeElapsedPre(this, Handle:hReturn)
 		PrintToServer("HasWeaponIdleTimeElapsed return false");
 		DHookSetReturn(hReturn, false);
 	}
-    return MRES_Supercede;
+	return MRES_Supercede;
 }
 //TODO: Make this a pre hook and tweak the entire function to taste.
 public MRESReturn:PrimaryAttackCrossbowPost(this)
@@ -820,5 +820,5 @@ public MRESReturn:PrimaryAttackCrossbowPost(this)
 	
 	SDKCall(hSetWeaponIdleTime, this, GetGameTime() - 1.5);
 	
-    return MRES_Ignored;
+	return MRES_Ignored;
 }

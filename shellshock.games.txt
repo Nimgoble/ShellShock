@@ -1,0 +1,118 @@
+"Games"
+{
+	/* Shellshock */
+	"hl2mp"
+	{
+		"Offsets"
+		{
+			"Spawn"
+			{
+				"windows"	"22"
+				"linux"		"23"
+				"mac"		"23"
+			}
+			"PreThink"
+			{
+				"windows"	"330"
+				"linux"		"331"
+				"mac"		"331"
+			}
+			"GiveAmmo"
+			{
+				"windows"	"250"
+				"linux"		"251"
+				"mac"		"251"
+			}
+			"RemoveAllItems"
+			{
+				"windows"	"340"
+				"linux"		"341"
+				"mac"		"341"
+			}
+			"SetAnimation"
+			{
+				"windows"	"362"
+				"linux"		"363"
+				"mac"		"363"
+			}
+			"HandleAnimEvent"
+			{
+				"windows"	"201"
+				"linux"		"202"
+				"mac"		"202"
+			}
+			"GetMaxClip1"
+			{
+				"windows"	"309"
+				"linux"		"310"
+				"mac"		"310"
+			}
+			"GetDefaultClip1"
+			{
+				"windows"	"311"
+				"linux"		"312"
+				"mac"		"312"
+			}
+			"AllowAutoSwitchFrom"
+			{
+				"windows"	"315"
+				"linux"		"316"
+				"mac"		"316"
+			}
+			"Operator_HandleAnimEvent"
+			{
+				"windows"	"354"
+				"linux"		"355"
+				"mac"		"355"
+			}
+			"Reload"
+			{
+				"windows"	"267"
+				"linux"		"268"
+				"mac"		"268"
+			}
+			"HasWeaponIdleTimeElapsed"
+			{
+				"windows"	"237"
+				"linux"		"238"
+				"mac"		"238"
+			}
+			"Weapon_Equip"
+			{
+				"windows"	"259"
+				"linux"		"260"
+				"mac"		"260"
+			}
+			"PrimaryAttack"
+			{
+				"windows"	"271"
+				"linux"		"272"
+				"mac"		"272"
+			}
+			"SecondaryAttack"
+			{
+				"windows"	"272"
+				"linux"		"273"
+				"mac"		"273"
+			}
+			"SetWeaponIdleTime"
+			{
+				"windows"	"238"
+				"linux"		"239"
+				"mac"		"239"
+			}
+			"FireBullets"
+			{
+				"windows"	"111"
+				"linux"		"112"
+				"mac"		"112"
+			}
+			"OnTakeDamage"
+			{
+				"windows"	"62"
+				"linux"		"63"
+				"mac"		"63"
+			}
+		}
+	}
+}
