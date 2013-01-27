@@ -76,6 +76,7 @@ new Handle:hss_357;
 new Handle:hss_shotgun_defaultclip;
 new Handle:hss_shotgun_maxclip;
 new Handle:hss_shotgun_damage_multiplier;
+new Handle:hss_shotgun_refire;
 //Actual values
 new Float:ss_respawn_time = 0.5;
 new Float:ss_playerspeed = 320.0;
@@ -93,14 +94,15 @@ new bool:ss_357 = false;
 new ss_shotgun_defaultclip = 8;
 new ss_shotgun_maxclip = 8;
 new Float:ss_shotgun_damage_multiplier = 3.0;
+new Float:ss_shotgun_refire = 3.0;
 
 //Plugin info
 public Plugin:myinfo =
 {
-	name = "ShellShock",
+	name = "Shell Shock",
 	author = "Nimgoble & pl4tinum",
 	description = "HL2:DM Shotgun mod",
-	version = "0.1",
+	version = "1.0.0.1",
 	url = "www.nimgoble.com"
 };
 
@@ -186,6 +188,7 @@ CreateConVars()
 	hss_shotgun_defaultclip				= CreateConVar("ss_shotgun_defaultclip", "8", "Sets the default clip size of the shotgun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_maxclip					= CreateConVar("ss_shotgun_maxclip", "8", "Sets the max clip size of the shogtun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_damage_multiplier		= CreateConVar("ss_shotgun_damage_multiplier", "3.0", "Sets the damage multiplier for the shotgun.", FCVAR_PROTECTED, true, 1.0);
+	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "3.0", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 1.0);
 
 	HookConVarChange(hss_respawn_time, SSConVarChanged);
 	HookConVarChange(hss_playerspeed, SSConVarChanged);
@@ -203,6 +206,7 @@ CreateConVars()
 	HookConVarChange(hss_shotgun_defaultclip, SSConVarChanged);
 	HookConVarChange(hss_shotgun_maxclip, SSConVarChanged);
 	HookConVarChange(hss_shotgun_damage_multiplier, SSConVarChanged);
+	HookConVarChange(hss_shotgun_refire, SSConVarChanged);
 }
 
 public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[])
@@ -273,6 +277,10 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 	else if(cvar == hss_shotgun_damage_multiplier)
 	{
 		ss_shotgun_damage_multiplier = StringToFloat(newVal);
+	}
+	else if(cvar == hss_shotgun_refire)
+	{
+		ss_shotgun_refire = (0.7 - StringToFloat(newVal));
 	}
 }
 public InitClientHooks(Handle:config)
@@ -674,24 +682,24 @@ public MRESReturn:AllowAutoSwitchFromPre(this, Handle:hReturn)
 }
 public MRESReturn:ReloadShotgunPost(this, Handle:hReturn)
 {
-	//Halve the refire time, thus decreasing the reload time
 	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	refire -= 0.35;//This isn't really half...
+	//.7 - (desired refire rate) = ss_shotgun_refire
+	refire -= ss_shotgun_refire;
 	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
 	return MRES_Ignored;
 }
 public MRESReturn:PrimaryAttackShotgunPost(this)
 {
-	//Halve the refire time
 	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	refire -= 0.35;
+	//.7 - (desired refire rate) = ss_shotgun_refire
+	refire -= ss_shotgun_refire;
 	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
 }
 public MRESReturn:SecondaryAttackShotgunPost(this)
 {
-	//Halve the refire time
 	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	refire -= 0.35;
+	//.7 - (desired refire rate) = ss_shotgun_refire
+	refire -= ss_shotgun_refire;
 	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
 }
 public MRESReturn:ReloadCrossbowPre(this, Handle:hReturn)
