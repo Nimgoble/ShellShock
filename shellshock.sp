@@ -188,7 +188,7 @@ CreateConVars()
 	hss_shotgun_defaultclip				= CreateConVar("ss_shotgun_defaultclip", "8", "Sets the default clip size of the shotgun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_maxclip					= CreateConVar("ss_shotgun_maxclip", "8", "Sets the max clip size of the shogtun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_damage_multiplier		= CreateConVar("ss_shotgun_damage_multiplier", "3.0", "Sets the damage multiplier for the shotgun.", FCVAR_PROTECTED, true, 1.0);
-	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "0.35", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 0.0, true, 0.7);
+	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "0.35", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 0.0);
 
 	HookConVarChange(hss_respawn_time, SSConVarChanged);
 	HookConVarChange(hss_playerspeed, SSConVarChanged);
