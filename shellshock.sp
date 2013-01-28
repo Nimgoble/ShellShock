@@ -94,7 +94,7 @@ new bool:ss_357 = false;
 new ss_shotgun_defaultclip = 8;
 new ss_shotgun_maxclip = 8;
 new Float:ss_shotgun_damage_multiplier = 3.0;
-new Float:ss_shotgun_refire = 3.0;
+new Float:ss_shotgun_refire = 0.35;
 
 //Plugin info
 public Plugin:myinfo =
@@ -188,7 +188,7 @@ CreateConVars()
 	hss_shotgun_defaultclip				= CreateConVar("ss_shotgun_defaultclip", "8", "Sets the default clip size of the shotgun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_maxclip					= CreateConVar("ss_shotgun_maxclip", "8", "Sets the max clip size of the shogtun", FCVAR_PROTECTED, true, 1.0);
 	hss_shotgun_damage_multiplier		= CreateConVar("ss_shotgun_damage_multiplier", "3.0", "Sets the damage multiplier for the shotgun.", FCVAR_PROTECTED, true, 1.0);
-	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "3.0", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 1.0);
+	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "0.35", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 0.0, true, 0.7);
 
 	HookConVarChange(hss_respawn_time, SSConVarChanged);
 	HookConVarChange(hss_playerspeed, SSConVarChanged);
@@ -280,7 +280,7 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 	}
 	else if(cvar == hss_shotgun_refire)
 	{
-		ss_shotgun_refire = (0.7 - StringToFloat(newVal));
+		ss_shotgun_refire = (StringToFloat(newVal) - 0.7);
 	}
 }
 public InitClientHooks(Handle:config)
@@ -682,31 +682,29 @@ public MRESReturn:AllowAutoSwitchFromPre(this, Handle:hReturn)
 }
 public MRESReturn:ReloadShotgunPost(this, Handle:hReturn)
 {
-	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	//.7 - (desired refire rate) = ss_shotgun_refire
-	refire -= ss_shotgun_refire;
-	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
+	SetShotgunRefire(this);
 	return MRES_Ignored;
 }
 public MRESReturn:PrimaryAttackShotgunPost(this)
 {
-	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	//.7 - (desired refire rate) = ss_shotgun_refire
-	refire -= ss_shotgun_refire;
-	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
+	SetShotgunRefire(this);
 }
 public MRESReturn:SecondaryAttackShotgunPost(this)
 {
-	new Float:refire = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	//.7 - (desired refire rate) = ss_shotgun_refire
-	refire -= ss_shotgun_refire;
-	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", refire);
+	SetShotgunRefire(this);
 }
 public MRESReturn:ReloadCrossbowPre(this, Handle:hReturn)
 {
 	SetEntProp(this, Prop_Send, "m_bMustReload", false);
 	DHookSetReturn(hReturn, true);
 	return MRES_Override;
+}
+SetShotgunRefire(shotgun)
+{
+	new Float:refire = GetEntPropFloat(shotgun, Prop_Send, "m_flNextPrimaryAttack");
+	//.7 - (desired refire rate) = ss_shotgun_refire
+	refire += ss_shotgun_refire;
+	SetEntPropFloat(shotgun, Prop_Send, "m_flNextPrimaryAttack", refire);
 }
 bool:ThrowContactGrenade(weaponFrag, Handle:hParams)
 {
