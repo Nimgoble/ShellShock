@@ -14,4 +14,4 @@ ShellShock
   
 SteamTools by Asherkin (http://hg.limetech.org/projects/steamtools/)  
 SMLIB by berni (https://github.com/bcserv/smlib/)  
-DHooks by Dr!fter (http://hg.nicholashastings.com/Drifter/DHooks/summary)  
+DHooks by Dr!fter (https://forums.alliedmods.net/showthread.php?t=180114) 
