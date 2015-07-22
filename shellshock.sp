@@ -154,7 +154,7 @@ public OnPluginStart()
 	InitClientHooks(config);
 	InitShotgunHooks(config);
 	InitFragHooks(config);
-	//InitCrossbowHooks(config);
+	InitCrossbowHooks(config);
 	
 	//Close config handle
 	CloseHandle(config);
@@ -172,23 +172,160 @@ public OnPluginStart()
 
 CreateConVars()
 {
-	hss_respawn_time 					= CreateConVar("ss_respawn_time", "0.5", "Sets how long a player has to wait until they can respawn", FCVAR_PROTECTED);
-	hss_playerspeed 					= CreateConVar("ss_playerspeed", "320", "Sets the speed of the players", FCVAR_PROTECTED, true, 1.0);
-	hss_physcannon 						= CreateConVar("ss_physcannon", "1", "Sets whether players spawn with the gravity gun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_shotgun 						= CreateConVar("ss_shotgun", "1", "Sets whether players spawn with the shotgun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_crossbow 						= CreateConVar("ss_crossbow", "0", "Sets whether players spawn with the crossbow", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_pistol 							= CreateConVar("ss_pistol", "1", "Sets whether players spawn with the pistol", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_rpg 							= CreateConVar("ss_rpg", "0", "Sets whether players spawn with the rpg", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_frag 							= CreateConVar("ss_frag", "0", "Sets whether players spawn with the frag", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_ar2 							= CreateConVar("ss_ar2", "0", "Sets whether players spawn with the ar2", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_smg1 							= CreateConVar("ss_smg1", "0", "Sets whether players spawn with the smg1", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_slam 							= CreateConVar("ss_slam", "0", "Sets whether players spawn with the slam", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_melee 							= CreateConVar("ss_melee", "1", "Sets whether players spawn with the melee", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_357 							= CreateConVar("ss_357", "0", "Sets whether players spawn with the 357", FCVAR_PROTECTED, true, 0.0, true, 1.0);
-	hss_shotgun_defaultclip				= CreateConVar("ss_shotgun_defaultclip", "8", "Sets the default clip size of the shotgun", FCVAR_PROTECTED, true, 1.0);
-	hss_shotgun_maxclip					= CreateConVar("ss_shotgun_maxclip", "8", "Sets the max clip size of the shogtun", FCVAR_PROTECTED, true, 1.0);
-	hss_shotgun_damage_multiplier		= CreateConVar("ss_shotgun_damage_multiplier", "3.0", "Sets the damage multiplier for the shotgun.", FCVAR_PROTECTED, true, 1.0);
-	hss_shotgun_refire					= CreateConVar("ss_shotgun_refire", "0.35", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 0.0);
+	new String:convarValue[32];
+	
+	hss_respawn_time = FindConVar("ss_respawn_time");
+	if(hss_respawn_time == INVALID_HANDLE)
+		hss_respawn_time = CreateConVar("ss_respawn_time", "0.5", "Sets how long a player has to wait until they can respawn", FCVAR_PROTECTED);
+	else
+	{
+		GetConVarString(hss_respawn_time, convarValue, 32)
+		ChangeCVAR(hss_respawn_time, convarValue);
+	}
+	
+	hss_playerspeed = FindConVar("ss_playerspeed");
+	if(hss_playerspeed == INVALID_HANDLE)
+		hss_playerspeed = CreateConVar("ss_playerspeed", "320", "Sets the speed of the players", FCVAR_PROTECTED, true, 1.0);
+	else
+	{
+		GetConVarString(hss_playerspeed, convarValue, 32)
+		ChangeCVAR(hss_playerspeed, convarValue);
+	}
+	
+	hss_physcannon = FindConVar("ss_physcannon");
+	if(hss_physcannon == INVALID_HANDLE)
+		hss_physcannon = CreateConVar("ss_physcannon", "1", "Sets whether players spawn with the gravity gun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_physcannon, convarValue, 32)
+		ChangeCVAR(hss_physcannon, convarValue);
+	}
+	
+	hss_shotgun = FindConVar("ss_shotgun");
+	if(hss_shotgun == INVALID_HANDLE)
+		hss_shotgun = CreateConVar("ss_shotgun", "1", "Sets whether players spawn with the shotgun", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_shotgun, convarValue, 32)
+		ChangeCVAR(hss_shotgun, convarValue);
+	}
+	
+	hss_crossbow = FindConVar("ss_crossbow");
+	if(hss_crossbow == INVALID_HANDLE)
+		hss_crossbow = CreateConVar("ss_crossbow", "0", "Sets whether players spawn with the crossbow", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_crossbow, convarValue, 32)
+		ChangeCVAR(hss_crossbow, convarValue);
+	}
+	
+	hss_pistol = FindConVar("ss_pistol");
+	if(hss_pistol == INVALID_HANDLE)
+		hss_pistol = CreateConVar("ss_pistol", "1", "Sets whether players spawn with the pistol", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_pistol, convarValue, 32)
+		ChangeCVAR(hss_pistol, convarValue);
+	}
+	
+	hss_rpg = FindConVar("ss_rpg");
+	if(hss_rpg == INVALID_HANDLE)
+		hss_rpg = CreateConVar("ss_rpg", "0", "Sets whether players spawn with the rpg", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_rpg, convarValue, 32)
+		ChangeCVAR(hss_rpg, convarValue);
+	}
+		
+	hss_frag = FindConVar("ss_frag");
+	if(hss_frag == INVALID_HANDLE)
+		hss_frag = CreateConVar("ss_frag", "0", "Sets whether players spawn with the frag", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_frag, convarValue, 32)
+		ChangeCVAR(hss_frag, convarValue);
+	}
+	
+	hss_ar2 = FindConVar("ss_ar2");
+	if(hss_ar2 == INVALID_HANDLE)
+		hss_ar2 = CreateConVar("ss_ar2", "0", "Sets whether players spawn with the ar2", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_ar2, convarValue, 32)
+		ChangeCVAR(hss_ar2, convarValue);
+	}
+	
+	hss_smg1 = FindConVar("ss_smg1");
+	if(hss_smg1 == INVALID_HANDLE)
+		hss_smg1 = CreateConVar("ss_smg1", "0", "Sets whether players spawn with the smg1", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_smg1, convarValue, 32)
+		ChangeCVAR(hss_smg1, convarValue);
+	}
+	
+	hss_slam = FindConVar("ss_slam");
+	if(hss_slam == INVALID_HANDLE)
+		hss_slam = CreateConVar("ss_slam", "0", "Sets whether players spawn with the slam", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_slam, convarValue, 32)
+		ChangeCVAR(hss_slam, convarValue);
+	}
+	
+	hss_melee = FindConVar("ss_melee");
+	if(hss_melee == INVALID_HANDLE)
+		hss_melee = CreateConVar("ss_melee", "1", "Sets whether players spawn with the melee", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_melee, convarValue, 32)
+		ChangeCVAR(hss_melee, convarValue);
+	}
+		
+	hss_357 = FindConVar("ss_357");
+	if(hss_357 == INVALID_HANDLE)
+		hss_357 = CreateConVar("ss_357", "0", "Sets whether players spawn with the 357", FCVAR_PROTECTED, true, 0.0, true, 1.0);
+	else
+	{
+		GetConVarString(hss_357, convarValue, 32)
+		ChangeCVAR(hss_357, convarValue);
+	}
+	
+	hss_shotgun_defaultclip = FindConVar("ss_shotgun_defaultclip");
+	if(hss_shotgun_defaultclip == INVALID_HANDLE)
+		hss_shotgun_defaultclip = CreateConVar("ss_shotgun_defaultclip", "8", "Sets the default clip size of the shotgun", FCVAR_PROTECTED, true, 1.0);
+	else
+	{
+		GetConVarString(hss_shotgun_defaultclip, convarValue, 32)
+		ChangeCVAR(hss_shotgun_defaultclip, convarValue);
+	}
+		
+	hss_shotgun_maxclip = FindConVar("ss_shotgun_maxclip");
+	if(hss_shotgun_maxclip == INVALID_HANDLE)
+		hss_shotgun_maxclip = CreateConVar("ss_shotgun_maxclip", "8", "Sets the max clip size of the shogtun", FCVAR_PROTECTED, true, 1.0);
+	else
+	{
+		GetConVarString(hss_shotgun_maxclip, convarValue, 32)
+		ChangeCVAR(hss_shotgun_maxclip, convarValue);
+	}
+		
+	hss_shotgun_damage_multiplier = FindConVar("ss_shotgun_damage_multiplier");
+	if(hss_shotgun_damage_multiplier == INVALID_HANDLE)
+		hss_shotgun_damage_multiplier = CreateConVar("ss_shotgun_damage_multiplier", "3.0", "Sets the damage multiplier for the shotgun.", FCVAR_PROTECTED, true, 1.0);
+	else
+	{
+		GetConVarString(hss_shotgun_damage_multiplier, convarValue, 32)
+		ChangeCVAR(hss_shotgun_damage_multiplier, convarValue);
+	}
+	
+	hss_shotgun_refire = FindConVar("hss_shotgun_refire");
+	if(hss_shotgun_refire == INVALID_HANDLE)
+		hss_shotgun_refire = CreateConVar("ss_shotgun_refire", "0.35", "Sets the refire time for the shotgun.", FCVAR_PROTECTED, true, 0.0);
+	else
+	{
+		GetConVarString(hss_shotgun_refire, convarValue, 32)
+		ChangeCVAR(hss_shotgun_refire, convarValue);
+	}
 
 	HookConVarChange(hss_respawn_time, SSConVarChanged);
 	HookConVarChange(hss_playerspeed, SSConVarChanged);
@@ -214,6 +351,14 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 	new String:convarName[32];
 	GetConVarName(cvar, convarName, 32);
 	PrintToServer("SSConVarChanged for %s: %s - %s", convarName, oldVal, newVal);
+	ChangeCVAR(cvar, newVal);
+}
+
+ChangeCVAR(Handle:cvar, const String:newVal[])
+{
+	new String:convarName[32];
+	GetConVarName(cvar, convarName, 32);
+	PrintToServer("Setting %s to %s", convarName, newVal);
 	if(cvar == hss_respawn_time)
 	{
 		ss_respawn_time = StringToFloat(newVal);
@@ -283,6 +428,7 @@ public SSConVarChanged(Handle:cvar, const String:oldVal[], const String:newVal[]
 		ss_shotgun_refire = (StringToFloat(newVal) - 0.7);
 	}
 }
+
 public InitClientHooks(Handle:config)
 {
 	//PreThink post hook
@@ -376,9 +522,9 @@ public HookExistingClient(client)
 	if(weaponIndex != -1)
 		HookFrag(weaponIndex);
 	
-	/*weaponIndex = Client_GetWeapon(client, "weapon_crossbow");
+	weaponIndex = Client_GetWeapon(client, "weapon_crossbow");
 	if(weaponIndex != -1)
-		HookCrossbow(weaponIndex);*/
+		HookCrossbow(weaponIndex);
 }
 
 public UnhookClient(client)
@@ -405,7 +551,7 @@ public HookCrossbow(crossbowIndex)
 	DHookEntity(hHasWeaponIdleTimeElapsed, false, crossbowIndex);
 	DHookEntity(hPrimaryAttackCrossbow, true, crossbowIndex);
 	DHookEntity(hReloadCrossbow, false, crossbowIndex);
-	SetEntProp(crossbowIndex, Prop_Data, "m_bReloadsSingly", false);
+	//SetEntProp(crossbowIndex, Prop_Data, "m_bReloadsSingly", false);
 }
 
 public Steam_FullyLoaded()
@@ -650,10 +796,11 @@ public MRESReturn:Weapon_EquipPost(this, Handle:hParams)
 	{
 		HookFrag(weapon);
 	}
-	/*else if(strcmp("weapon_crossbow", weaponname) == 0)
+	else if(strcmp("weapon_crossbow", weaponname) == 0)
 	{
 		HookCrossbow(weapon);
-	}*/
+		Weapon_SetOwner(weapon, this);
+	}
 		
 	return MRES_Ignored;
 }
@@ -695,15 +842,17 @@ public MRESReturn:SecondaryAttackShotgunPost(this)
 }
 public MRESReturn:ReloadCrossbowPre(this, Handle:hReturn)
 {
-	SetEntProp(this, Prop_Send, "m_bMustReload", false);
-	DHookSetReturn(hReturn, true);
-	return MRES_Override;
+	//SetEntProp(this, Prop_Send, "m_bMustReload", false);
+	//DHookSetReturn(hReturn, true);
+	return MRES_Ignored;
 }
 SetShotgunRefire(shotgun)
 {
 	new Float:refire = GetEntPropFloat(shotgun, Prop_Send, "m_flNextPrimaryAttack");
+	PrintToServer("Shotgun refire was: %f", refire);
 	//.7 - (desired refire rate) = ss_shotgun_refire
 	refire += ss_shotgun_refire;
+	PrintToServer("Shotgun refire is now: %f", refire);
 	SetEntPropFloat(shotgun, Prop_Send, "m_flNextPrimaryAttack", refire);
 }
 bool:ThrowContactGrenade(weaponFrag, Handle:hParams)
@@ -806,25 +955,236 @@ public MRESReturn:HasWeaponIdleTimeElapsedPre(this, Handle:hReturn)
 	}
 	else
 	{
-		PrintToServer("HasWeaponIdleTimeElapsed return false");
-		DHookSetReturn(hReturn, false);
+		//PrintToServer("HasWeaponIdleTimeElapsed return false");
+		//DHookSetReturn(hReturn, false);
+		DHookSetReturn(hReturn, true);
 	}
 	return MRES_Supercede;
 }
-//TODO: Make this a pre hook and tweak the entire function to taste.
+
 public MRESReturn:PrimaryAttackCrossbowPost(this)
 {
-	//Primary Attack set to .5
-	new Float:m_flNextPrimaryAttack = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
-	m_flNextPrimaryAttack -= 0.25;
-	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", m_flNextPrimaryAttack);
-	
-	//Secondary Attack set to .25
-	new Float:m_flNextSecondaryAttack = GetEntPropFloat(this, Prop_Send, "m_flNextSecondaryAttack");
-	m_flNextSecondaryAttack -= 0.5;
-	SetEntPropFloat(this, Prop_Send, "m_flNextSecondaryAttack", m_flNextSecondaryAttack);
-	
-	SDKCall(hSetWeaponIdleTime, this, GetGameTime() - 1.5);
+	PrintToServer("PrimaryAttackCrossbowPost");
+	new Float:m_flNextAttack = GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
+	PrintToServer("m_flNextAttack was: %f", m_flNextAttack);
+	m_flNextAttack -= 500.0;
+	PrintToServer("m_flNextAttack is now: %f", m_flNextAttack);
+	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", m_flNextAttack);
+	SetEntPropFloat(this, Prop_Send, "m_flNextSecondaryAttack", m_flNextAttack);
+	SetEntPropFloat(this, Prop_Send, "m_flTimeWeaponIdle", m_flNextAttack);
 	
 	return MRES_Ignored;
+}
+
+/*
+ * if ( m_iClip1 <= 0 )
+	{
+	if ( !m_bFireOnEmpty )
+	{
+	Reload();
+	}
+	else
+	{
+	WeaponSound( EMPTY );
+	m_flNextPrimaryAttack = 0.15;
+	}
+	
+	return;
+	}
+	
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	
+	if ( pOwner == NULL )
+	return;
+	
+	#ifndef CLIENT_DLL
+	Vector vecAiming	= pOwner->GetAutoaimVector( 0 );	
+	Vector vecSrc		= pOwner->Weapon_ShootPosition();
+	
+	QAngle angAiming;
+	VectorAngles( vecAiming, angAiming );
+	
+	CCrossbowBolt *pBolt = CCrossbowBolt::BoltCreate( vecSrc, angAiming, GetHL2MPWpnData().m_iPlayerDamage, pOwner );
+	
+	CCrossbowBolt *CCrossbowBolt::BoltCreate( const Vector &vecOrigin, const QAngle &angAngles, int iDamage, CBasePlayer *pentOwner )
+	{
+	// Create a new entity with CCrossbowBolt private data
+	CCrossbowBolt *pBolt = (CCrossbowBolt *)CreateEntityByName( "crossbow_bolt" );
+	UTIL_SetOrigin( pBolt, vecOrigin );
+	pBolt->SetAbsAngles( angAngles );
+	pBolt->Spawn();
+	pBolt->SetOwnerEntity( pentOwner );
+	
+	pBolt->m_iDamage = iDamage;
+	
+	return pBolt;
+	}
+	
+	if ( pOwner->GetWaterLevel() == 3 )
+	{
+	pBolt->SetAbsVelocity( vecAiming * BOLT_WATER_VELOCITY );
+	}
+	else
+	{
+	pBolt->SetAbsVelocity( vecAiming * BOLT_AIR_VELOCITY );
+	}
+	
+	#endif
+	
+	m_iClip1--;
+	
+	pOwner->ViewPunch( QAngle( -2, 0, 0 ) );
+	
+	WeaponSound( SINGLE );
+	WeaponSound( SPECIAL2 );
+	
+	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+	
+	if ( !m_iClip1 && pOwner->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
+	{
+	// HEV suit - indicate out of ammo condition
+	pOwner->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
+	}
+	
+	m_flNextPrimaryAttack = m_flNextSecondaryAttack	= gpGlobals->curtime + 0.75;
+	
+	DoLoadEffect();
+	SetChargerState( CHARGER_STATE_DISCHARGE );
+	
+	// Signal a reload
+	m_bMustReload = true;
+	
+	SetWeaponIdleTime( gpGlobals->curtime + SequenceDuration( ACT_VM_PRIMARYATTACK ) );
+ * */
+//TODO: Make this a pre hook and tweak the entire function to taste.
+//This isn't going to work.  There's no way to set the damage with this
+public MRESReturn:PrimaryAttackCrossbowPre(this)
+{
+	PrintToServer("Crossbow Primary Attack");
+	new Handle:client = Weapon_GetOwner(this);
+	if(client == -1)
+	{
+		PrintToServer("Client is null in Crossbow PrimaryAttack");
+		return MRES_Ignored;
+	}
+	
+	new m_iClip1 = Weapon_GetPrimaryClip(this);
+	if(m_iClip1 <= 0)
+	{
+		//SDKCall(hReloadCrossbow);
+		return MRES_Supercede;
+	}
+	
+	//Vector vecAiming	= pOwner->GetAutoaimVector( 0 );
+	/* 	Vector	forward;
+		AngleVectors( EyeAngles() + m_Local.m_vecPunchAngle, &forward );
+	 * */
+	//EyeAngles() 
+	new Float:vecEyeAngles[3];
+	GetClientEyeAngles(client, vecEyeAngles);
+	PrintToServer("Player Eye Angles: (%f, %f, %f)", vecEyeAngles[0], vecEyeAngles[1], vecEyeAngles[2]);
+	//m_Local.m_vecPunchAngle
+	new Float:vecPunchAngle[3];
+	GetEntPropVector(client, Prop_Send, "m_vecPunchAngle", vecPunchAngle);
+	PrintToServer("Player punch angle: (%f, %f, %f)", vecPunchAngle[0], vecPunchAngle[1], vecPunchAngle[2]);
+	//EyeAngles() + m_Local.m_vecPunchAngle
+	new Float:vecEyeResult[3];
+	AddVectors(vecEyeAngles, vecPunchAngle, vecEyeResult);
+	PrintToServer("Player EyeAngles + Punch angle: (%f, %f, %f)", vecEyeResult[0], vecEyeResult[1], vecEyeResult[2]);
+	//AngleVectors( EyeAngles() + m_Local.m_vecPunchAngle, &forward );
+	new Float:vecAiming[3];
+	GetAngleVectors(vecEyeResult, vecAiming, NULL_VECTOR, NULL_VECTOR);
+	PrintToServer("GetAutoaimVector: (%f, %f, %f)", vecAiming[0], vecAiming[1], vecAiming[2]);
+	
+	//Vector vecSrc		= pOwner->Weapon_ShootPosition();
+	/*
+	 * AngleVectors( GetAbsAngles(), &forward, &right, &up );
+		
+		Vector vecSrc = GetAbsOrigin() 
+		+ forward * m_HackedGunPos.y 
+		+ right * m_HackedGunPos.x 
+		+ up * m_HackedGunPos.z;
+	 * */
+	
+	new Float:clientAngles[3];
+	GetClientAbsAngles(client, clientAngles);
+	new Float:vecForward[3];
+	new Float:vecRight[3];
+	new Float:vecUp[3];
+	GetAngleVectors(clientAngles, vecForward, vecRight, vecUp);
+	//m_HackedGunPos = (0, 32, 0)
+	ScaleVector(vecForward, 32.0);
+	
+	new Float:vecSrc[3];
+	GetClientAbsOrigin(client, vecSrc);
+	AddVectors(vecSrc, vecForward, vecSrc);
+	
+	//GetClientEyePosition(client, vecSrc);
+	PrintToServer("Weapon_ShootPosition: (%f, %f, %f)", vecSrc[0], vecSrc[1], vecSrc[2]);
+	
+	//QAngle angAiming;
+	//VectorAngles( vecAiming, angAiming );
+	new Float:angAiming[3];
+	GetVectorAngles(vecAiming, angAiming);
+	PrintToServer("angAiming: (%f, %f, %f)", angAiming[0], angAiming[1], angAiming[2]);
+	
+	new crossbowBolt = CreateEntityByName("crossbow_bolt");
+	if(crossbowBolt == -1)
+	{
+		PrintToServer("Unable to make crossbow bolt");
+		return MRES_Ignored;
+	}
+	
+	Entity_SetAbsOrigin(crossbowBolt, vecSrc);
+	Entity_SetAbsAngles(crossbowBolt, angAiming);
+	Entity_SetOwner(crossbowBolt, client);
+	DispatchSpawn(crossbowBolt);
+	
+	PrintToServer("vecAiming before: (%f, %f, %f)", vecAiming[0], vecAiming[1], vecAiming[2]);
+	ScaleVector(vecAiming, 7000.0);
+	PrintToServer("vecAiming after: (%f, %f, %f)", vecAiming[0], vecAiming[1], vecAiming[2]);
+	
+	Entity_SetAbsVelocity(crossbowBolt, vecAiming);
+	new Float:vecCrossbowBoltVel[3];
+	Entity_GetAbsVelocity(crossbowBolt, vecCrossbowBoltVel);
+	PrintToServer("Crossbow bolt velocity: (%f, %f, %f)", vecCrossbowBoltVel[0], vecCrossbowBoltVel[1], vecCrossbowBoltVel[2]);
+	//SetEntProp(crossbowBolt, Prop_Send, "m_iDamage", 240.0);
+	
+	//m_iClip1--;
+	//DecrementAmmo( pOwner );
+	new primaryAmmoCount = 0;
+	new secondaryAmmoCount = -1;
+	Client_GetWeaponPlayerAmmo(client, "weapon_crossbow", primaryAmmoCount, secondaryAmmoCount);
+	Client_SetWeaponPlayerAmmoEx(client, this, primaryAmmoCount - 1, secondaryAmmoCount);
+	
+	//pOwner->ViewPunch( QAngle( -2, 0, 0 ) );
+	new Float:vecPunchAngleVel[3];
+	GetEntPropVector(client, Prop_Send, "m_vecPunchAngleVel", vecPunchAngleVel);
+	new Float:vecPunchAngleAdd[3];
+	vecPunchAngleAdd[0] = -40;
+	AddVectors(vecPunchAngleVel, vecPunchAngleAdd, vecPunchAngleVel);
+	PrintToServer("m_vecPunchAngleVel: (%f, %f, %f)", vecPunchAngleVel[0], vecPunchAngleVel[1], vecPunchAngleVel[2]);
+	SetEntPropVector(client, Prop_Send, "m_vecPunchAngleVel", vecPunchAngleVel);
+	
+	//WeaponSound( SINGLE );
+	//WeaponSound( SPECIAL2 );
+	
+	//SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+	
+	/*if ( !m_iClip1 && pOwner->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
+	{
+		// HEV suit - indicate out of ammo condition
+		pOwner->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
+	}*/
+	
+	//m_flNextPrimaryAttack = m_flNextSecondaryAttack	= gpGlobals->curtime + 0.75;
+	//Primary Attack set to .5
+	new Float:m_flNextAttack = GetGameTime() + 0.25;//GetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack");
+	SetEntPropFloat(this, Prop_Send, "m_flNextPrimaryAttack", m_flNextAttack);
+	SetEntPropFloat(this, Prop_Send, "m_flNextSecondaryAttack", m_flNextAttack);
+	
+	//No idle
+	SDKCall(hSetWeaponIdleTime, this, GetGameTime() - 1.5);
+	
+	return MRES_Supercede;
 }
